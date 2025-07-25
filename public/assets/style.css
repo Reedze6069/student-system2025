@@ -1,0 +1,77 @@
+/* Basic global styling */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* Container for better spacing */
+.container {
+    max-width: 900px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Style tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+table th, table td {
+    padding: 10px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+table th {
+    background: #007bff;
+    color: #fff;
+}
+
+/* Buttons */
+button, .btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover, .btn:hover {
+    background: #0056b3;
+}
+
+/* Links */
+a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+/* ✅ Fade-in animation for error messages */
+#error-message {
+    display: none;
+    opacity: 0;
+    transition: opacity 0.4s ease-in-out;
+    color: #ff3333;
+    font-weight: bold;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* When error is shown */
+#error-message.show {
+    display: block;
+    opacity: 1;
+}

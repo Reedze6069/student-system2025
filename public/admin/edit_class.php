@@ -49,6 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Edit Class</title>
+    <link rel="stylesheet" href="../assets/style.css">
+
 </head>
 <body>
 <h1>Edit Class</h1>

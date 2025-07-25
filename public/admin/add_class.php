@@ -41,6 +41,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Add Class</title>
+    <link rel="stylesheet" href="../assets/style.css">
+
 </head>
 <body>
 <h1>Add New Class</h1>

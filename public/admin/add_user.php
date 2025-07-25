@@ -1,4 +1,5 @@
 <?php
+global $pdo;
 session_start();
 require_once __DIR__ . "/../../config/db.php";
 
@@ -31,6 +32,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html>
 <head>
     <title>Add User</title>
+    <link rel="stylesheet" href="../assets/style.css">
+
 </head>
 <body>
 <h1>Add New User</h1>

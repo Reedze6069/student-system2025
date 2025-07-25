@@ -19,6 +19,8 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>Manage Users</title>
+    <link rel="stylesheet" href="../assets/style.css">
+
 </head>
 <body>
 <h1>Manage Users</h1>

@@ -23,6 +23,8 @@ $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>Manage Classes</title>
+    <link rel="stylesheet" href="../assets/style.css">
+
 </head>
 <body>
 <h1>Manage Classes</h1>

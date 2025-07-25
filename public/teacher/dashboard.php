@@ -26,6 +26,8 @@ $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>Teacher Dashboard</title>
+    <link rel="stylesheet" href="../assets/style.css">
+
 </head>
 <body>
 <h1>Welcome, Teacher!</h1>
@@ -49,7 +51,8 @@ $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= htmlspecialchars($class['room']) ?></td>
                 <td><?= $class['start_time'] ?> → <?= $class['end_time'] ?></td>
                 <td>
-                    <a href="assignments.php?class_id=<?= $class['id'] ?>">📄 Manage Assignments</a>
+                    <a href="assignments.php?class_id=<?= $class['id'] ?>">📄 Manage Assignments</a> |
+                    <a href="attendance.php?class_id=<?= $class['id'] ?>">📋 Manage Attendance</a>
                 </td>
             </tr>
         <?php endforeach; ?>

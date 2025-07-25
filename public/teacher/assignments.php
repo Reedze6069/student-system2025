@@ -90,6 +90,8 @@ $assignments = $assignments_stmt->fetchAll(PDO::FETCH_ASSOC);
 <html>
 <head>
     <title>Manage Assignments - <?= htmlspecialchars($class['subject_name']) ?></title>
+    <link rel="stylesheet" href="../assets/style.css">
+
 </head>
 <body>
 <h1>Assignments for <?= htmlspecialchars($class['subject_name']) ?></h1>
@@ -124,8 +126,11 @@ $assignments = $assignments_stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td>
                     <a href="edit_assignment.php?id=<?= $a['id'] ?>">✏️ Edit</a> |
                     <a href="delete_assignment.php?id=<?= $a['id'] ?>&class_id=<?= $class_id ?>"
-                       onclick="return confirm('Are you sure you want to delete this assignment?');">🗑 Delete</a>
+                       onclick="return confirm('Are you sure you want to delete this assignment?');">🗑 Delete</a> |
+                    <a href="view_submissions.php?id=<?= $a['id'] ?>">📥 View Submissions</a>
                 </td>
+
+
             </tr>
         <?php endforeach; ?>
     </table>
