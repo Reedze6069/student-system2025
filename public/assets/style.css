@@ -1,65 +1,106 @@
-/* Basic global styling */
+/* =========================================
+   📌 GLOBAL LAYOUT (Sticky Footer)
+========================================= */
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column; /* stack everything vertically */
+}
+
+body > *:not(.site-footer) {
+    flex: 1; /* push footer down if content is short */
+}
+
+/* =========================================
+   🌐 GLOBAL STYLES
+========================================= */
 body {
     font-family: Arial, sans-serif;
     background: #f4f4f9;
-    margin: 0;
-    padding: 20px;
     color: #333;
+    line-height: 1.4;
+    padding: 20px;
 }
 
-/* Container for better spacing */
+/* Generic container for content pages */
 .container {
     max-width: 900px;
     margin: auto;
     background: #fff;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* Style tables */
+/* =========================================
+   📊 TABLE STYLES
+========================================= */
 table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 20px;
 }
 
-table th, table td {
-    padding: 10px;
+table th,
+table td {
+    padding: 16px 14px;
+    font-size: 15px;
     border: 1px solid #ccc;
     text-align: left;
+    vertical-align: top;
+
+    word-break: break-word;
+    overflow-wrap: anywhere;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 table th {
     background: #007bff;
     color: #fff;
+    text-transform: uppercase;
+    font-size: 13px;
 }
 
-/* Buttons */
-button, .btn {
+table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* =========================================
+   🔘 BUTTONS & LINKS
+========================================= */
+button,
+.btn {
     background: #007bff;
-    color: white;
+    color: #fff;
     border: none;
     padding: 10px 15px;
     border-radius: 4px;
     cursor: pointer;
+    transition: background 0.2s ease-in-out;
 }
 
-button:hover, .btn:hover {
+button:hover,
+.btn:hover {
     background: #0056b3;
 }
 
-/* Links */
 a {
     color: #007bff;
     text-decoration: none;
+    transition: color 0.2s ease-in-out;
 }
 
 a:hover {
     text-decoration: underline;
 }
 
-/* ✅ Fade-in animation for error messages */
+/* =========================================
+   ⚠️ ERROR MESSAGE FADE-IN
+========================================= */
 #error-message {
     display: none;
     opacity: 0;
@@ -70,8 +111,481 @@ a:hover {
     text-align: center;
 }
 
-/* When error is shown */
 #error-message.show {
     display: block;
     opacity: 1;
+}
+
+/* =========================================
+   🔐 LOGIN PAGE (Centered Card)
+========================================= */
+body.login-page {
+    background: #f5f6fa;
+    justify-content: center;
+    align-items: center;
+    flex: 1;
+    padding: 0;
+}
+
+.login-card {
+    background: #fff;
+    padding: 30px;
+    width: 500px;
+    max-width: 90%;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.login-card h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.login-card label {
+    display: block;
+    text-align: left;
+    font-weight: bold;
+    margin: 10px 0 5px;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    margin-bottom: 10px;
+}
+
+.login-card button {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: #fff;
+    font-size: 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease-in-out;
+}
+
+.login-card button:hover {
+    background: #0056b3;
+}
+
+.login-card p {
+    font-size: 14px;
+    margin-top: 15px;
+    color: #555;
+}
+
+/* =========================================
+   🏠 DASHBOARD PAGE (Centered Card Layout)
+========================================= */
+body.dashboard-page {
+    background: #f4f6f9;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* ✅ Generic dashboard wrapper (centers content) */
+.dashboard-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* ✅ Base dashboard card */
+.dashboard-card {
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.dashboard-card.student-view {
+    max-width: 700px;
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+    .dashboard-card.student-view {
+        max-width: 900px;
+        text-align: left;
+    }
+}
+
+/* ✅ Teacher dashboard is wider for table */
+.dashboard-card.teacher-view {
+    max-width: 1000px;
+    text-align: left;
+}
+
+/* ✅ Wider card for Attendance & Table-heavy views */
+.dashboard-card.attendance-view {
+    max-width: 800px;
+    text-align: center;
+}
+
+/* ✅ Dashboard headings */
+.dashboard-card h1 {
+    font-size: 26px;
+    margin-bottom: 10px;
+    color: #222;
+    text-align: center;
+}
+
+.dashboard-card h2 {
+    font-size: 20px;
+    margin-bottom: 20px;
+    color: #555;
+    text-align: center;
+}
+
+/* ✅ Dashboard table inside card */
+.dashboard-card table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.dashboard-card th,
+.dashboard-card td {
+    padding: 12px;
+    border: 1px solid #ddd;
+}
+
+.dashboard-card th {
+    background: #007bff;
+    color: #fff;
+}
+
+.dashboard-card tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* ✅ Big modern dashboard buttons */
+.dashboard-btn {
+    display: block;
+    width: 100%;
+    background: #007bff;
+    color: #fff;
+    text-decoration: none;
+    padding: 12px 15px;
+    border-radius: 8px;
+    font-size: 16px;
+    margin: 10px 0;
+    font-weight: 500;
+    transition: background 0.2s ease-in-out;
+    text-align: center;
+}
+
+.dashboard-btn:hover {
+    background: #0056b3;
+}
+
+/* ✅ Logout button */
+.logout-btn {
+    display: block;
+    margin: 25px auto 0;
+    padding: 12px 20px;
+    background: #dc3545;
+    color: #fff !important;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+    font-size: 16px;
+    text-align: center;
+    transition: background 0.2s ease-in-out;
+}
+
+.logout-btn:hover {
+    background: #b52b39;
+}
+
+
+/* =========================================
+   📌 FOOTER - Full Width Sticky Modern
+========================================= */
+.site-footer {
+    background: #222;
+    color: #ccc;
+    text-align: center;
+    padding: 20px 0;
+    margin-top: auto;
+    font-size: 14px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    width: 100%;
+}
+
+.site-footer .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 15px;
+}
+
+.site-footer p {
+    margin: 0;
+    color: #aaa;
+}
+
+/* Footer links row */
+.footer-links {
+    margin-top: 10px;
+    font-size: 13px;
+}
+
+.footer-links a {
+    color: #bbb;
+    margin: 0 8px;
+    text-decoration: none;
+    transition: color 0.2s ease-in-out;
+}
+
+.footer-links span {
+    color: #666;
+}
+
+.footer-links a:hover {
+    color: #fff;
+}
+
+/* =========================================
+   📝 ATTENDANCE PAGE FIX
+========================================= */
+.attendance-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.attendance-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.attendance-wrapper th,
+.attendance-wrapper td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.attendance-wrapper th {
+    background: #007bff;
+    color: #fff;
+}
+
+.attendance-wrapper tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.save-attendance {
+    display: inline-block;
+    margin-top: 15px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 20px;
+    color: #007bff;
+    text-decoration: none;
+}
+.back-link:hover {
+    text-decoration: underline;
+}
+
+/* =========================================
+   📋 Table Management Pages (Users, Classes, Enrollments)
+========================================= */
+.table-page-wrapper {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.table-page-wrapper h1 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.table-page-wrapper table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 auto;
+}
+
+.table-page-wrapper th,
+.table-page-wrapper td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.table-page-wrapper th {
+    background: #007bff;
+    color: #fff;
+}
+
+.table-page-wrapper tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+.table-page-wrapper .back-link {
+    display: inline-block;
+    margin-top: 15px;
+}
+
+/* =========================================
+   ✏️ FORM STYLING (Edit/Add User, etc.)
+========================================= */
+.form-card {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    text-align: left;
+}
+
+.form-card h1 {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 25px;
+}
+
+.form-card label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 4px;
+    color: #444;
+}
+
+.form-card input,
+.form-card select {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: all 0.2s ease-in-out;
+    box-sizing: border-box;
+}
+
+.form-card input:focus,
+.form-card select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.2);
+    outline: none;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.btn-submit:hover {
+    background: #0056b3;
+}
+
+.form-card .back-link {
+    display: block;
+    text-align: center;
+    margin-top: 15px;
+    color: #007bff;
+}
+
+.form-card .back-link:hover {
+    text-decoration: underline;
+}
+
+/* ✅ Wide layout for dashboard-card forms (edit user etc.) */
+.dashboard-card.wide-view {
+    max-width: 700px;
+    width: 100%;
+    padding: 40px;
+    margin: 0 auto;
+    text-align: left;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.dashboard-card.wide-view h1 {
+    text-align: left;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.dashboard-card.wide-view form {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.dashboard-card.wide-view label {
+    grid-column: span 2;
+}
+
+.dashboard-card.wide-view select {
+    grid-column: span 2;
+}
+
+.dashboard-card.wide-view .btn-submit {
+    grid-column: span 2;
+}
+
+.dashboard-card.wide-view .back-link {
+    grid-column: span 2;
+    text-align: left;
+    margin-top: 10px;
+}
+.table-wrapper {
+    overflow-x: auto;
+}
+.table-wrapper table {
+    min-width: 100%;
+    width: 100%;
+    table-layout: fixed;
+}
+.dashboard-card table td:nth-child(2),
+.dashboard-card table th:nth-child(2) {
+    max-width: 220px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table td a {
+    display: inline-block;
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
 }

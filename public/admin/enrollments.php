@@ -3,13 +3,13 @@ session_start();
 require_once __DIR__ . "/../../config/db.php";
 global $pdo;
 
-//  Only Admin can access
+// ✅ Only Admin can access
 if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
     header("Location: ../login.php");
     exit();
 }
 
-//  Fetch all classes with subject & teacher info
+// ✅ Fetch all classes with subject & teacher info
 $stmt = $pdo->query("
     SELECT c.id, s.name AS subject_name, u.username AS teacher_name, c.room
     FROM classes c
@@ -24,33 +24,39 @@ $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>Manage Enrollments</title>
     <link rel="stylesheet" href="../assets/style.css">
-
 </head>
-<body>
-<h1>Manage Student Enrollments</h1>
+<body class="dashboard-page">
 
-<table border="1" cellpadding="8">
-    <tr>
-        <th>ID</th>
-        <th>Subject</th>
-        <th>Teacher</th>
-        <th>Room</th>
-        <th>Action</th>
-    </tr>
-    <?php foreach ($classes as $class): ?>
-        <tr>
-            <td><?= $class['id'] ?></td>
-            <td><?= htmlspecialchars($class['subject_name']) ?></td>
-            <td><?= htmlspecialchars($class['teacher_name'] ?? 'No Teacher') ?></td>
-            <td><?= htmlspecialchars($class['room']) ?></td>
-            <td>
-                <a href="manage_enrollment.php?class_id=<?= $class['id'] ?>">Manage Enrollment</a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</table>
+<div class="dashboard-wrapper">
+    <div class="dashboard-card teacher-view">
+        <h1>Manage Student Enrollments</h1>
 
-<br>
-<a href="../dashboard.php">⬅ Back to Dashboard</a>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Action</th>
+            </tr>
+            <?php foreach ($classes as $class): ?>
+                <tr>
+                    <td><?= $class['id'] ?></td>
+                    <td><?= htmlspecialchars($class['subject_name']) ?></td>
+                    <td><?= htmlspecialchars($class['teacher_name'] ?? 'No Teacher') ?></td>
+                    <td><?= htmlspecialchars($class['room']) ?></td>
+                    <td>
+                        <a href="manage_enrollment.php?class_id=<?= $class['id'] ?>">Manage Enrollment</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+
+        <br>
+        <a class="back-link" href="../dashboard.php">⬅ Back to Dashboard</a>
+    </div>
+</div>
+
+<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>

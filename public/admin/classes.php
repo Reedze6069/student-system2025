@@ -1,5 +1,5 @@
 <?php
-global $pdo, $pdo;
+global $pdo;
 session_start();
 require_once __DIR__ . "/../../config/db.php";
 
@@ -24,42 +24,48 @@ $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>Manage Classes</title>
     <link rel="stylesheet" href="../assets/style.css">
-
 </head>
-<body>
-<h1>Manage Classes</h1>
-<a href="add_class.php">+ Add New Class</a>
-<br><br>
 
-<table border="1" cellpadding="8">
-    <tr>
-        <th>ID</th>
-        <th>Subject</th>
-        <th>Teacher</th>
-        <th>Room</th>
-        <th>Schedule</th>
-        <th>Actions</th>
-    </tr>
+<body class="dashboard-page">
+<div class="dashboard-wrapper">
+    <div class="dashboard-card teacher-view">
+        <h1>Manage Classes</h1>
+        <a class="dashboard-btn" href="add_class.php">+ Add New Class</a>
+        <br><br>
 
-    <?php foreach ($classes as $class): ?>
-        <tr>
-            <td><?= $class['id'] ?></td>
-            <td><?= htmlspecialchars($class['subject_name']) ?></td>
-            <td><?= $class['teacher_name'] ?? 'Not Assigned' ?></td>
-            <td><?= htmlspecialchars($class['room']) ?></td>
-            <td>
-                <?= htmlspecialchars($class['start_time']) ?> →
-                <?= htmlspecialchars($class['end_time']) ?>
-            </td>
-            <td>
-                <a href="edit_class.php?id=<?= $class['id'] ?>">Edit</a> |
-                <a href="delete_class.php?id=<?= $class['id'] ?>" onclick="return confirm('Delete this class?')">Delete</a>
-            </td>
-        </tr>
-    <?php endforeach; ?>
-</table>
+        <table>
+            <tr>
+                <th>ID</th>
+                <th>Subject</th>
+                <th>Teacher</th>
+                <th>Room</th>
+                <th>Schedule</th>
+                <th>Actions</th>
+            </tr>
 
-<br>
-<a href="../dashboard.php">⬅ Back to Dashboard</a>
+            <?php foreach ($classes as $class): ?>
+                <tr>
+                    <td><?= $class['id'] ?></td>
+                    <td><?= htmlspecialchars($class['subject_name']) ?></td>
+                    <td><?= $class['teacher_name'] ?? 'Not Assigned' ?></td>
+                    <td><?= htmlspecialchars($class['room']) ?></td>
+                    <td>
+                        <?= htmlspecialchars($class['start_time']) ?> →
+                        <?= htmlspecialchars($class['end_time']) ?>
+                    </td>
+                    <td>
+                        <a href="edit_class.php?id=<?= $class['id'] ?>">Edit</a> |
+                        <a href="delete_class.php?id=<?= $class['id'] ?>" onclick="return confirm('Delete this class?')">Delete</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+
+        <br>
+        <a class="back-link" href="../dashboard.php">⬅ Back to Dashboard</a>
+    </div>
+</div>
+
+<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>

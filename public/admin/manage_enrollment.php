@@ -3,7 +3,7 @@ session_start();
 require_once __DIR__ . "/../../config/db.php";
 global $pdo;
 
-//  Only Admin can access
+// ✅ Only Admin can access
 if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
     header("Location: ../login.php");
     exit();
@@ -15,7 +15,7 @@ if (!$class_id) {
     exit();
 }
 
-//  Fetch class info
+// ✅ Fetch class info
 $class_stmt = $pdo->prepare("
     SELECT c.id, s.name AS subject_name, u.username AS teacher_name
     FROM classes c
@@ -31,34 +31,38 @@ if (!$class) {
     exit();
 }
 
-//  Fetch all students (role_id = 3)
+// ✅ Fetch all students (role_id = 3)
 $students_stmt = $pdo->query("SELECT id, username, email FROM users WHERE role_id = 3 ORDER BY username ASC");
 $students = $students_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-//  Fetch already enrolled students (IMPORTANT: using user_id now)
+// ✅ Fetch already enrolled students
 $enrolled_stmt = $pdo->prepare("SELECT user_id FROM enrollments WHERE class_id = ?");
 $enrolled_stmt->execute([$class_id]);
 
-// Convert to integer array for correct checkbox matching
 $enrolled_students = [];
 while ($row = $enrolled_stmt->fetch(PDO::FETCH_ASSOC)) {
     $enrolled_students[] = (int)$row['user_id'];
 }
 
-//  Handle form submission
+// ✅ Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $selected_students = $_POST['students'] ?? [];
 
-    // Delete all current enrollments for this class
+    // 1. Delete grades linked to this class
+    $pdo->prepare("DELETE FROM grades WHERE enrollment_id IN (SELECT id FROM enrollments WHERE class_id = ?)")->execute([$class_id]);
+
+    // 2. Delete attendance for this class
+    $pdo->prepare("DELETE FROM attendance WHERE enrollment_id IN (SELECT id FROM enrollments WHERE class_id = ?)")->execute([$class_id]);
+
+    // 3. Delete old enrollments
     $pdo->prepare("DELETE FROM enrollments WHERE class_id = ?")->execute([$class_id]);
 
-    // Insert new enrollments
+    // 4. Insert updated enrollments
     $insert_stmt = $pdo->prepare("INSERT INTO enrollments (class_id, user_id) VALUES (?, ?)");
     foreach ($selected_students as $student_id) {
         $insert_stmt->execute([$class_id, $student_id]);
     }
 
-    // Redirect back to class list
     header("Location: enrollments.php");
     exit();
 }
@@ -68,39 +72,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <title>Manage Enrollment - <?= htmlspecialchars($class['subject_name']) ?></title>
     <link rel="stylesheet" href="../assets/style.css">
-
 </head>
-<body>
-<h1>Manage Enrollment for <?= htmlspecialchars($class['subject_name']) ?></h1>
-<p>Teacher: <?= htmlspecialchars($class['teacher_name'] ?? 'No Teacher') ?></p>
+<body class="dashboard-page">
 
-<form method="POST">
-    <?php if (empty($students)): ?>
-        <p>No students found. Please create some student accounts first.</p>
-    <?php else: ?>
-        <table border="1" cellpadding="8">
-            <tr>
-                <th>Enroll</th>
-                <th>Student Name</th>
-                <th>Email</th>
-            </tr>
-            <?php foreach ($students as $student): ?>
-                <tr>
-                    <td>
-                        <input type="checkbox" name="students[]" value="<?= $student['id'] ?>"
-                            <?= in_array((int)$student['id'], $enrolled_students, true) ? 'checked' : '' ?>>
-                    </td>
-                    <td><?= htmlspecialchars($student['username']) ?></td>
-                    <td><?= htmlspecialchars($student['email']) ?></td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
+<div class="dashboard-wrapper">
+    <div class="dashboard-card teacher-view">
+        <h1>Manage Enrollment for <?= htmlspecialchars($class['subject_name']) ?></h1>
+        <p>Teacher: <?= htmlspecialchars($class['teacher_name'] ?? 'No Teacher') ?></p>
+
+        <form method="POST">
+            <?php if (empty($students)): ?>
+                <p>No students found. Please create some student accounts first.</p>
+            <?php else: ?>
+                <table>
+                    <tr>
+                        <th>Enroll</th>
+                        <th>Student Name</th>
+                        <th>Email</th>
+                    </tr>
+                    <?php foreach ($students as $student): ?>
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="students[]" value="<?= $student['id'] ?>"
+                                    <?= in_array((int)$student['id'], $enrolled_students, true) ? 'checked' : '' ?>>
+                            </td>
+                            <td><?= htmlspecialchars($student['username']) ?></td>
+                            <td><?= htmlspecialchars($student['email']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+                <br>
+                <button type="submit" class="btn-submit">Save Enrollment</button>
+            <?php endif; ?>
+        </form>
+
         <br>
-        <button type="submit">Save Enrollment</button>
-    <?php endif; ?>
-</form>
+        <a class="back-link" href="enrollments.php">⬅ Back to Classes</a>
+    </div>
+</div>
 
-<br>
-<a href="enrollments.php">⬅ Back to Classes</a>
+<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>

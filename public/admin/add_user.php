@@ -9,11 +9,11 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
     exit();
 }
 
-// Fetch roles for dropdown
+// ✅ Fetch roles
 $roles_stmt = $pdo->query("SELECT * FROM roles");
 $roles = $roles_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Handle form submission
+// ✅ Handle submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $username = $_POST['username'];
     $email = $_POST['email'];
@@ -33,30 +33,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <title>Add User</title>
     <link rel="stylesheet" href="../assets/style.css">
-
 </head>
-<body>
-<h1>Add New User</h1>
-<form method="POST">
-    <label>Username:</label><br>
-    <input type="text" name="username" required><br><br>
+<body class="dashboard-page">
+<div class="dashboard-wrapper">
+    <div class="dashboard-card wide-view">
+        <h1>Add New User</h1>
 
-    <label>Email:</label><br>
-    <input type="email" name="email" required><br><br>
+        <form method="POST">
+            <label for="username">Username:</label>
+            <input id="username" type="text" name="username" required>
 
-    <label>Password:</label><br>
-    <input type="password" name="password" required><br><br>
+            <label for="email">Email:</label>
+            <input id="email" type="email" name="email" required>
 
-    <label>Role:</label><br>
-    <select name="role_id" required>
-        <?php foreach ($roles as $role): ?>
-            <option value="<?= $role['id']; ?>"><?= htmlspecialchars($role['role_name']); ?></option>
-        <?php endforeach; ?>
-    </select><br><br>
+            <label for="password">Password:</label>
+            <input id="password" type="password" name="password" required>
 
-    <button type="submit">Add User</button>
-</form>
-<br>
-<a href="users.php">⬅ Back</a>
+            <label for="role_id">Role:</label>
+            <select id="role_id" name="role_id" required>
+                <?php foreach ($roles as $role): ?>
+                    <option value="<?= $role['id']; ?>"><?= htmlspecialchars($role['role_name']); ?></option>
+                <?php endforeach; ?>
+            </select>
+
+            <button type="submit" class="btn-submit">Add User</button>
+        </form>
+
+        <a class="back-link" href="users.php">⬅ Back</a>
+    </div>
+</div>
+
+<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>

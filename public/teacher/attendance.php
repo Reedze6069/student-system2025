@@ -49,7 +49,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $attendanceData = $_POST['attendance'] ?? [];
 
     foreach ($attendanceData as $enrollment_id => $status) {
-
         // ✅ Check if a record already exists for this student & date
         $checkStmt = $pdo->prepare("
             SELECT id FROM attendance 
@@ -59,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $existing = $checkStmt->fetch(PDO::FETCH_ASSOC);
 
         if ($existing) {
-            // ✅ Update existing record instead of duplicating
+            // ✅ Update existing record
             $updateStmt = $pdo->prepare("
                 UPDATE attendance 
                 SET status = ?, notes = NULL 
@@ -67,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ");
             $updateStmt->execute([$status, $existing['id']]);
         } else {
-            // ✅ Insert new record if none exists
+            // ✅ Insert new record
             $insertStmt = $pdo->prepare("
                 INSERT INTO attendance (enrollment_id, status, date, created_at)
                 VALUES (?, ?, ?, NOW())
@@ -76,52 +75,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    echo "<p style='color: green; font-weight: bold;'>✅ Attendance saved/updated successfully for today ($date)!</p>";
+    $success_message = "✅ Attendance saved/updated successfully for today ($date)!";
 }
 ?>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Manage Attendance - <?= htmlspecialchars($class['subject_name']) ?></title>
-    <link rel="stylesheet" href="../assets/style.css">
-
+    <link rel="stylesheet" href="../assets/style.css?v=<?= time(); ?>">
 </head>
-<body>
-<h1>📋 Manage Attendance</h1>
-<h3>Class: <?= htmlspecialchars($class['subject_name']) ?> | Room: <?= htmlspecialchars($class['room']) ?></h3>
-<p><strong>Schedule:</strong> <?= $class['start_time'] ?> → <?= $class['end_time'] ?></p>
-<hr>
+<body class="dashboard-page">
 
-<?php if (empty($students)): ?>
-    <p>❌ No students enrolled in this class.</p>
-<?php else: ?>
-    <form method="POST">
-        <table border="1" cellpadding="8">
-            <tr>
-                <th>Student</th>
-                <th>Email</th>
-                <th>Status</th>
-            </tr>
-            <?php foreach ($students as $student): ?>
-                <tr>
-                    <td><?= htmlspecialchars($student['username']) ?></td>
-                    <td><?= htmlspecialchars($student['email']) ?></td>
-                    <td>
-                        <select name="attendance[<?= $student['enrollment_id'] ?>]">
-                            <option value="present">✅ Present</option>
-                            <option value="absent">❌ Absent</option>
-                        </select>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </table>
+<div class="dashboard-wrapper">
+    <div class="dashboard-card teacher-view">
 
-        <br>
-        <button type="submit">💾 Save Attendance</button>
-    </form>
-<?php endif; ?>
+        <h1> Manage Attendance</h1>
+        <h2>
+            Class: <?= htmlspecialchars($class['subject_name']) ?> |
+            Room: <?= htmlspecialchars($class['room']) ?>
+        </h2>
+        <p><strong>Schedule:</strong> <?= $class['start_time'] ?> → <?= $class['end_time'] ?></p>
 
-<br>
-<a href="dashboard.php">⬅ Back to Teacher Dashboard</a>
+        <?php if (!empty($success_message)): ?>
+            <p style="color: green; font-weight: bold; text-align:center;"><?= $success_message ?></p>
+        <?php endif; ?>
+
+        <hr>
+
+        <?php if (empty($students)): ?>
+            <p style="text-align:center; color:red;"> No students enrolled in this class.</p>
+        <?php else: ?>
+            <form method="POST">
+                <div class="attendance-wrapper">
+                    <table>
+                        <thead>
+                        <tr>
+                            <th>Student</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <?php foreach ($students as $student): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($student['username']) ?></td>
+                                <td><?= htmlspecialchars($student['email']) ?></td>
+                                <td>
+                                    <select name="attendance[<?= $student['enrollment_id'] ?>]">
+                                        <option value="present">✅ Present</option>
+                                        <option value="absent">❌ Absent</option>
+                                    </select>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                        </tbody>
+                    </table>
+
+                    <button type="submit" class="save-attendance"> Save Attendance</button>
+                </div>
+            </form>
+        <?php endif; ?>
+
+        <a class="back-link" href="dashboard.php">⬅ Back to Teacher Dashboard</a>
+    </div>
+</div>
+
+<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>

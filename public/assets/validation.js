@@ -49,4 +49,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // ✅ Clear error when user starts typing
     email.addEventListener("input", clearError);
     password.addEventListener("input", clearError);
+    console.log("✅ Login JS is running!");
+
 });

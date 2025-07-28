@@ -39,13 +39,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = $_POST['description'];
     $due_date = $_POST['due_date'];
 
-    // Update assignment details
+    // Update assignment
     $updateStmt = $pdo->prepare("
-        UPDATE assignments SET title=?, description=?, due_date=? WHERE id=?
+        UPDATE assignments SET title = ?, description = ?, due_date = ? WHERE id = ?
     ");
     $updateStmt->execute([$title, $description, $due_date, $assignment_id]);
 
-    // ✅ Handle optional new file upload
+    // ✅ Optional file upload
     if (!empty($_FILES['assignment_file']['name'])) {
         $uploadDir = __DIR__ . "/../../uploads/assignments/";
         if (!is_dir($uploadDir)) {
@@ -58,10 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (move_uploaded_file($_FILES['assignment_file']['tmp_name'], $targetPath)) {
             $filePathDB = "uploads/assignments/" . $fileName;
 
-            // If assignment already had a file, delete old record
-            $pdo->prepare("DELETE FROM assignment_files WHERE assignment_id=?")->execute([$assignment_id]);
+            // Delete old record if exists
+            $pdo->prepare("DELETE FROM assignment_files WHERE assignment_id = ?")->execute([$assignment_id]);
 
-            // Save new file record
+            // Insert new file
             $fileStmt = $pdo->prepare("
                 INSERT INTO assignment_files (assignment_id, file_name, file_path)
                 VALUES (?, ?, ?)
@@ -77,36 +77,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset="UTF-8">
     <title>Edit Assignment</title>
-    <link rel="stylesheet" href="../assets/style.css">
-
+    <link rel="stylesheet" href="../assets/style.css?v=<?= time(); ?>">
 </head>
-<body>
-<h1>Edit Assignment</h1>
+<body class="dashboard-page">
+<div class="dashboard-wrapper">
+    <div class="dashboard-card teacher-view">
+        <h1>Edit Assignment</h1>
 
-<form method="POST" enctype="multipart/form-data">
-    <label>Title:</label><br>
-    <input type="text" name="title" value="<?= htmlspecialchars($assignment['title']) ?>" required><br><br>
+        <form method="POST" enctype="multipart/form-data">
+            <label>Title:</label><br>
+            <input type="text" name="title" value="<?= htmlspecialchars($assignment['title']) ?>" required><br><br>
 
-    <label>Description:</label><br>
-    <textarea name="description" rows="4" cols="40"><?= htmlspecialchars($assignment['description']) ?></textarea><br><br>
+            <label>Description:</label><br>
+            <textarea name="description" rows="4" cols="40"><?= htmlspecialchars($assignment['description']) ?></textarea><br><br>
 
-    <label>Due Date:</label><br>
-    <input type="datetime-local" name="due_date" value="<?= date('Y-m-d\TH:i', strtotime($assignment['due_date'])) ?>" required><br><br>
+            <label>Due Date:</label><br>
+            <input type="datetime-local" name="due_date" value="<?= date('Y-m-d\TH:i', strtotime($assignment['due_date'])) ?>" required><br><br>
 
-    <?php if ($assignment['file_path']): ?>
-        <p>Current file: <a href="../../<?= htmlspecialchars($assignment['file_path']) ?>" target="_blank"><?= htmlspecialchars($assignment['file_name']) ?></a></p>
-    <?php else: ?>
-        <p>No file currently attached.</p>
-    <?php endif; ?>
+            <?php if ($assignment['file_path']): ?>
+                <p>Current File:
+                    <a href="../../<?= htmlspecialchars($assignment['file_path']) ?>" target="_blank">
+                        📄 <?= htmlspecialchars($assignment['file_name']) ?>
+                    </a>
+                </p>
+            <?php else: ?>
+                <p>No file currently attached.</p>
+            <?php endif; ?>
 
-    <label>Upload New File (optional):</label><br>
-    <input type="file" name="assignment_file"><br><br>
+            <label>Upload New File (optional):</label><br>
+            <input type="file" name="assignment_file"><br><br>
 
-    <button type="submit">Update Assignment</button>
-</form>
+            <button type="submit" class="btn-submit">Update Assignment</button>
+        </form>
 
-<br>
-<a href="assignments.php?class_id=<?= $assignment['class_id'] ?>">⬅ Back to Assignments</a>
+        <br>
+        <a class="back-link" href="assignments.php?class_id=<?= $assignment['class_id'] ?>">⬅ Back to Assignments</a>
+    </div>
+</div>
+
+<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>
