@@ -30,7 +30,7 @@ git clone https://github.com/Reedze6069/student-system2025.git
 | ------- | --------------------------------------------------- | ---------- |
 | Admin   | admin@test.com | admin123   |
 | Teacher | Teacher@test.com| teacher123 |
-| Student | riedleazzopardi@yahoo.com | student123 |
+| Student | riedleazzopardi@yahoo.com | riedle123 |
 
 
 2. Import the database:
