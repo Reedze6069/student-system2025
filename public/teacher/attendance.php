@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
-    $success_message = "✅ Attendance saved/updated successfully for today ($date)!";
+    $success_message = " Attendance saved/updated successfully for today ($date)!";
 }
 ?>
 <!DOCTYPE html>

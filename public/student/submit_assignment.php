@@ -45,7 +45,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_submitted) {
     $filePathDB = null;
     $originalFileName = null;
 
-    // ✅ Handle uploaded file
     if (!empty($_FILES['submission_file']['name'])) {
         $uploadDir = __DIR__ . "/../../uploads/submissions/";
         if (!is_dir($uploadDir)) {
@@ -61,7 +60,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_submitted) {
         }
     }
 
-    // ✅ Insert into submissions table
     $insertStmt = $pdo->prepare("
         INSERT INTO submissions (assignment_id, user_id, file_name, fille_path, student_comment, submitted_at, grade, feedback)
         VALUES (?, ?, ?, ?, ?, NOW(), NULL, NULL)
@@ -74,7 +72,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_submitted) {
         $comment
     ]);
 
-    // ✅ Redirect to My Submissions with success message
     header("Location: my_submissions.php?success=1");
     exit();
 }
@@ -82,34 +79,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !$already_submitted) {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Submit Assignment</title>
+    <title>📤 Submit Assignment</title>
     <link rel="stylesheet" href="../assets/style.css">
-
 </head>
-<body>
-<h1>📤 Submit Assignment</h1>
+<body class="dashboard-page">
+<div class="dashboard-wrapper">
+    <div class="dashboard-card student-view">
+        <h1>📤 Submit Assignment</h1>
 
-<h3><?= htmlspecialchars($assignment['subject_name']) ?> - <?= htmlspecialchars($assignment['title']) ?></h3>
-<p><?= htmlspecialchars($assignment['description']) ?></p>
-<p><strong>Due Date:</strong> <?= $assignment['due_date'] ?></p>
+        <h3><?= htmlspecialchars($assignment['subject_name']) ?> - <?= htmlspecialchars($assignment['title']) ?></h3>
+        <p><?= htmlspecialchars($assignment['description']) ?></p>
+        <p><strong>Due Date:</strong> <?= htmlspecialchars($assignment['due_date']) ?></p>
+        <hr>
 
-<hr>
+        <?php if ($already_submitted): ?>
+            <p style="color: green; font-weight: bold;">✅ You have already submitted this assignment!</p>
+            <a href="assignments.php" class="back-link">⬅ Back to My Assignments</a>
+        <?php else: ?>
+            <form method="POST" enctype="multipart/form-data">
+                <label for="submission_file">Upload Your File:</label><br>
+                <input type="file" name="submission_file" id="submission_file" required><br><br>
 
-<?php if ($already_submitted): ?>
-    <p style="color: green; font-weight: bold;">✅ You have already submitted this assignment!</p>
-    <a href="assignments.php">⬅ Back to My Assignments</a>
-<?php else: ?>
-    <form method="POST" enctype="multipart/form-data">
-        <label>Upload Your File:</label><br>
-        <input type="file" name="submission_file" required><br><br>
+                <label for="comment">Comment (optional):</label><br>
+                <textarea name="comment" id="comment" rows="4" style="width: 100%;"></textarea><br><br>
 
-        <label>Comment (optional):</label><br>
-        <textarea name="comment" rows="4" cols="40"></textarea><br><br>
+                <button type="submit" class="btn-submit">✅ Submit Assignment</button>
+            </form>
 
-        <button type="submit">✅ Submit Assignment</button>
-    </form>
-    <br>
-    <a href="assignments.php">⬅ Back to My Assignments</a>
-<?php endif; ?>
+            <br>
+            <a href="assignments.php" class="back-link">⬅ Back to My Assignments</a>
+        <?php endif; ?>
+    </div>
+</div>
+
+<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>
