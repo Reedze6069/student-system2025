@@ -40,7 +40,7 @@ $attendance_records = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         <?php if (empty($attendance_records)): ?>
             <p style="text-align:center; color:red; font-weight:bold;">
-                ❌ No attendance records yet.
+                 No attendance records yet.
             </p>
         <?php else: ?>
             <!-- ✅ Attendance table wrapper for better spacing -->

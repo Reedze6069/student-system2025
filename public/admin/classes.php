@@ -30,6 +30,22 @@ $classes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <div class="dashboard-wrapper">
     <div class="dashboard-card teacher-view">
         <h1>Manage Classes</h1>
+
+        <!-- ✅ Inline Feedback Message Boxes -->
+        <?php if (isset($_SESSION['error'])): ?>
+            <div style="background: #fff3f3; border: 1px solid #f5c2c2; padding: 10px 15px; border-radius: 6px; color: #b10000; font-weight: 500; max-width: 600px; margin: 10px 0;">
+                <?= $_SESSION['error']; ?>
+            </div>
+            <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['success'])): ?>
+            <div style="background: #e8f8ec; border: 1px solid #c1e6cd; padding: 10px 15px; border-radius: 6px; color: #2f7a41; font-weight: 500; max-width: 600px; margin: 10px 0;">
+                <?= $_SESSION['success']; ?>
+            </div>
+            <?php unset($_SESSION['success']); ?>
+        <?php endif; ?>
+
         <a class="dashboard-btn" href="add_class.php">+ Add New Class</a>
         <br><br>
 

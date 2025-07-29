@@ -19,20 +19,34 @@ $teachers = $teachers_stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // ✅ Handle submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $subject_id = $_POST['subject_id'];
-    $teacher_id = $_POST['teacher_id'] ?: null;
-    $room = $_POST['room'];
-    $start_time = $_POST['start_time'];
-    $end_time = $_POST['end_time'];
+    $subject_id = $_POST['subject_id'] ?? null;
+    $teacher_id = $_POST['teacher_id'] ?? null;
+    $room = $_POST['room'] ?? '';
+    $start_time = $_POST['start_time'] ?? '';
+    $end_time = $_POST['end_time'] ?? '';
 
-    $stmt = $pdo->prepare("
-        INSERT INTO classes (subject_id, teacher_id, room, start_time, end_time) 
-        VALUES (?, ?, ?, ?, ?)
-    ");
-    $stmt->execute([$subject_id, $teacher_id, $room, $start_time, $end_time]);
+    // ❌ Prevent adding class with no teacher
+    if (empty($teacher_id)) {
+        $_SESSION['error'] = "Please assign a teacher before creating the class.";
+        header("Location: classes.php");
+        exit();
+    }
 
-    header("Location: classes.php");
-    exit();
+    try {
+        $stmt = $pdo->prepare("
+            INSERT INTO classes (subject_id, teacher_id, room, start_time, end_time) 
+            VALUES (?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([$subject_id, $teacher_id, $room, $start_time, $end_time]);
+
+        $_SESSION['success'] = "Class added successfully.";
+        header("Location: classes.php");
+        exit();
+    } catch (PDOException $e) {
+        $_SESSION['error'] = "An error occurred while adding the class.";
+        header("Location: classes.php");
+        exit();
+    }
 }
 ?>
 <!DOCTYPE html>
@@ -55,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </select>
 
             <label for="teacher_id">Assign Teacher:</label>
-            <select id="teacher_id" name="teacher_id">
+            <select id="teacher_id" name="teacher_id" required>
                 <option value="">-- No Teacher --</option>
                 <?php foreach ($teachers as $teacher): ?>
                     <option value="<?= $teacher['id'] ?>"><?= htmlspecialchars($teacher['username']) ?></option>

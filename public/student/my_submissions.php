@@ -32,51 +32,57 @@ $submissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <title>📄 My Submissions</title>
     <link rel="stylesheet" href="../assets/style.css">
-
 </head>
-<body>
-<h1>📄 My Submissions</h1>
+<body class="dashboard-page">
+<div class="dashboard-wrapper">
+    <div class="dashboard-card student-view">
+        <h1>📄 My Submissions</h1>
 
-<?php if (empty($submissions)): ?>
-    <p>❌ You have not submitted any assignments yet.</p>
-<?php else: ?>
-    <?php if (isset($_GET['success'])): ?>
-        <p style="color: green; font-weight: bold;"> Assignment submitted successfully!</p>
-    <?php endif; ?>
+        <?php if (empty($submissions)): ?>
+            <p>❌ You have not submitted any assignments yet.</p>
+        <?php else: ?>
+            <?php if (isset($_GET['success'])): ?>
+                <p style="color: green; font-weight: bold;"> Assignment submitted successfully!</p>
+            <?php endif; ?>
 
-    <table border="1" cellpadding="8">
-        <tr>
-            <th>Subject</th>
-            <th>Assignment</th>
-            <th>Due Date</th>
-            <th>Submitted File</th>
-            <th>Your Comment</th>
-            <th>Submitted At</th>
-            <th>Grade</th>
-            <th>Feedback</th>
-        </tr>
-        <?php foreach ($submissions as $sub): ?>
-            <tr>
-                <td><?= htmlspecialchars($sub['subject_name']) ?></td>
-                <td><?= htmlspecialchars($sub['assignment_title']) ?></td>
-                <td><?= $sub['due_date'] ?></td>
-                <td>
-                    <?php if ($sub['fille_path']): ?>
-                        <a href="../../<?= htmlspecialchars($sub['fille_path']) ?>" target="_blank">📄 <?= htmlspecialchars($sub['file_name']) ?></a>
-                    <?php else: ?>
-                        ❌ No file
-                    <?php endif; ?>
-                </td>
-                <td><?= htmlspecialchars($sub['student_comment']) ?: '-' ?></td>
-                <td><?= $sub['submitted_at'] ?></td>
-                <td><?= $sub['grade'] !== null ? htmlspecialchars($sub['grade']) : '⏳ Pending' ?></td>
-                <td><?= $sub['feedback'] ?: 'No feedback yet' ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-<?php endif; ?>
+            <div class="table-wrapper">
+                <table>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Assignment</th>
+                        <th>Due Date</th>
+                        <th>Submitted File</th>
+                        <th>Your Comment</th>
+                        <th>Submitted At</th>
+                        <th>Grade</th>
+                        <th>Feedback</th>
+                    </tr>
+                    <?php foreach ($submissions as $sub): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($sub['subject_name']) ?></td>
+                            <td><?= htmlspecialchars($sub['assignment_title']) ?></td>
+                            <td><?= $sub['due_date'] ?></td>
+                            <td>
+                                <?php if ($sub['fille_path']): ?>
+                                    <a href="../../<?= htmlspecialchars($sub['fille_path']) ?>" target="_blank">📄 <?= htmlspecialchars($sub['file_name']) ?></a>
+                                <?php else: ?>
+                                    ❌ No file
+                                <?php endif; ?>
+                            </td>
+                            <td><?= htmlspecialchars($sub['student_comment']) ?: '-' ?></td>
+                            <td><?= $sub['submitted_at'] ?></td>
+                            <td><?= $sub['grade'] !== null ? htmlspecialchars($sub['grade']) : '⏳ Pending' ?></td>
+                            <td><?= $sub['feedback'] ?: 'No feedback yet' ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </table>
+            </div>
+        <?php endif; ?>
 
-<br>
-<a href="../dashboard.php">⬅ Back to Dashboard</a>
+        <a class="back-link" href="../dashboard.php">⬅ Back to Dashboard</a>
+    </div>
+</div>
+
+<?php include __DIR__ . '/../templates/footer.php'; ?>
 </body>
 </html>
